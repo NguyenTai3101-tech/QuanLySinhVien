@@ -5,20 +5,29 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email === "" || password === "") {
-      alert("Không được để thông tin trống");
-      return;
-    }
-    const listUser = JSON.parse(localStorage.getItem("listUser")) || [];
-    const isSuccess = listUser.some(
-      (user) => user.email === email && user.password === password,
-    );
-    if (isSuccess) {
-      alert("Chúc mừng đăng nhập thành công");
-      navigate("/profile");
-    } else {
-      alert("Sai tài khoản hoặc mật khẩu");
+  const handleLogin = async () => {
+    try {
+      if (email === "" || password === "") {
+        alert("Không được để thông tin trống");
+        return;
+      }
+      const response = await fetch(
+        "http://localhost:8080/api/students/login",
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        },
+      );
+      const message = await response.text();
+      if (response.ok) {
+        alert(message);
+        navigate("/home");
+      } else {
+        alert(message);
+      }
+    } catch (error) {
+      alert("Lỗi kết nối ! Hãy kiểm tra Spring Boot đã bật chưa");
     }
   };
   return (

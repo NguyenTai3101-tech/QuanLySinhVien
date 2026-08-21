@@ -41,7 +41,9 @@ export default function FixProfile() {
         />
         <div>
           <button onClick={() => handleSave()}>Lưu thông tin</button>
+          <button onClick={() => navigate("/profile")}>Quay lại</button>
         </div>
+        
       </div>
     </>
   );

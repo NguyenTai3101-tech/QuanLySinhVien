@@ -5,7 +5,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  const handleRegister = () => {
+  const handleRegister = async ()  => {
     if (email == "" || password == "" || confirmPassword == "") {
       alert("Tạo tài khoản không thành công chỉ thành phượng");
       return;
@@ -18,21 +18,27 @@ export default function Register() {
       alert("Tài khoản không có dạng @gmail.com");
       return;
     }
-    if (password.length <= 8) {
+    if (password.length < 8) {
       alert("Mật khẩu quá ngắn");
       return;
     }
-    const listUser = JSON.parse(localStorage.getItem("listUser")) || [];
-    const isExist = listUser.some((user) => user.email === email);
-    if (isExist) {
-      alert("Tài khoản đã tồn tại");
-      return;
+    try {
+      const reponse = await fetch("http://localhost:8080/api/students/register",{
+        method: "POST",
+        headers :{"Content-type":"application/json"},
+        body: JSON.stringify({email,password})
+      })
+      const message = await reponse.text();
+      if(reponse.ok){
+        alert(message);
+        navigate("/login");
+      } else {
+        alert(message);
+      }
     }
-    listUser.push({ email, password });
-    localStorage.setItem("listUser", JSON.stringify(listUser));
-
-    alert("Đã tạo thành công tài khoản");
-    navigate("/login");
+    catch (error){
+      alert("Lỗi kết nối!Thử xem mở Spring boot");
+    }
   };
 
   return (

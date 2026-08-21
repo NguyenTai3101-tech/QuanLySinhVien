@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Route,Routes} from "react-router-dom"
+import { Route, Routes } from "react-router-dom";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
 import Profile from "./Profile.jsx";
@@ -14,6 +14,7 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/fix-profile" element={<FixProfile />} />
+      <Route path="/home" element={<Home />} />
     </Routes>
   );
 }

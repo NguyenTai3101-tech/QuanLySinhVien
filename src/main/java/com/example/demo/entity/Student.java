@@ -1,6 +1,10 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "students")
@@ -10,18 +14,21 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
+    private String name;
     private String email;
-    private String studentCode;
+    private String studentID;
+    private String school;
+    private String password;
+    
 
     public Student() {}
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -33,10 +40,23 @@ public class Student {
     }
 
     public String getStudentCode() {
-        return studentCode;
+        return studentID;
     }
 
-    public void setStudentCode(String studentCode) {
-        this.studentCode = studentCode;
+    public void setStudentCode(String studentID) {
+        this.studentID = studentID;
+    }
+    public String getSchool() {
+        return school;
+    }
+    public void setSchool(String school) {
+        this.school = school;
+    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

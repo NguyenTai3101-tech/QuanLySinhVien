@@ -1,15 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Home() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const handleNavigate =(path) =>{
+      setIsOpen(false);
+      navigate(path);
+  }
   return (
     <>
       <div>
         <h2>CaroIT</h2>
-        <button onClick={() =>setIsOpen(!isOpen)}>Profile ▼</button>
+        <button onClick={() => setIsOpen(!isOpen)}>Profile ▼</button>
         {isOpen && (
           <ul>
             <li>
-              <button onClick={() => alert("Đã vào trang thông tin")}>
+              <button onClick={() => handleNavigate("/profile")}>
                 Thông tin cá nhân
               </button>
             </li>
@@ -24,7 +30,7 @@ export default function Home() {
               </button>
             </li>
             <li>
-              <button onClick={() => alert("Đã đăng xuất")}>Đăng xuất</button>
+              <button onClick={() => handleNavigate("/login")}>Đăng xuất</button>
             </li>
           </ul>
         )}
