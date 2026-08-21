@@ -1,14 +1,21 @@
 import { useState } from "react";
-import Profile from "./Profile";
+import { Navigate, useNavigate } from "react-router-dom";
+
 export default function FixProfile() {
   const [name, setName] = useState("");
   const [studentID, setStudentID] = useState("");
   const [school, setSchool] = useState("");
-  const [isFix,setIsFix] = useState(false);
-  const [saveInfo, setSaveInfo] = useState(null);
-  const handleSave = () => {    
-    setSaveInfo({studentID, name, school});
-    setIsFix(true);
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    const studentData = { studentID, name, school };
+    if (studentID.trim() === "" || name.trim() === "" || school.trim() === "") {
+      alert("Không được để thông tin trống");
+      return;
+    }
+    localStorage.setItem("inFoStudent", JSON.stringify(studentData));
+    alert("Chỉnh sửa thông tin thành công");
+    navigate("/profile");
   };
   return (
     <>
@@ -35,7 +42,6 @@ export default function FixProfile() {
         <div>
           <button onClick={() => handleSave()}>Lưu thông tin</button>
         </div>
-        <Profile inFo = {saveInfo} />
       </div>
     </>
   );
