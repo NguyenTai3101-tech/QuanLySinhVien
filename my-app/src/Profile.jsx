@@ -9,7 +9,7 @@ export default function Profile({ inFo }) {
       <div>
         <h1>Thông tin sinh viên</h1>
         <p>Họ và tên : {inFoStudent?.name || ""}</p>
-        <p> Mã sinh viên : {inFoStudent?.studentID || ""}</p>
+        <p> Mã sinh viên : {inFoStudent?.studentId || ""}</p>
         <p>Trường : {inFoStudent?.school || ""}</p>
         <button onClick={() => navigate("/fix-profile")}>
           Chỉnh sửa thông tin

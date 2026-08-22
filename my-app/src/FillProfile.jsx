@@ -1,26 +1,42 @@
 import { useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function FixProfile() {
+export default function FillProfile() {
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
   const [school, setSchool] = useState("");
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    const studentData = { studentId, name, school };
+  const handleSave = async () => {
     if (studentId.trim() === "" || name.trim() === "" || school.trim() === "") {
       alert("Không được để thông tin trống");
       return;
     }
-    localStorage.setItem("inFoStudent", JSON.stringify(studentData));
-    alert("Chỉnh sửa thông tin thành công");
-    navigate("/profile");
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await fetch(
+        `https://localhost:8080/api/students/${userId}`,
+        {
+          method: "GET",
+          headers: { "Content-type": "application/api" },
+          body: JSON.stringify({ name, school, studentId }),
+        },
+      );
+      const message = await response.text();
+      if (response.ok) {
+        alert(message);
+        navigate("/login");
+      } else {
+        alert(message);
+      }
+    } catch (error) {
+      alert("Kiểm tra lại Spring boot");
+    }
   };
   return (
     <>
       <div>
-        <h2>Chỉnh sửa thông tin cá nhân</h2>
+        <h2>Thông tin cá nhân</h2>
         <input
           type="text"
           placeholder="StudentId"
@@ -41,9 +57,7 @@ export default function FixProfile() {
         />
         <div>
           <button onClick={() => handleSave()}>Lưu thông tin</button>
-          <button onClick={() => navigate("/profile")}>Quay lại</button>
         </div>
-        
       </div>
     </>
   );

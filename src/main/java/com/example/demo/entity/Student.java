@@ -16,7 +16,7 @@ public class Student {
 
     private String name;
     private String email;
-    private String studentID;
+    private String studentId;
     private String school;
     private String password;
     
@@ -39,12 +39,12 @@ public class Student {
         this.email = email;
     }
 
-    public String getStudentCode() {
-        return studentID;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setStudentCode(String studentID) {
-        this.studentID = studentID;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
     public String getSchool() {
         return school;

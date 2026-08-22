@@ -5,6 +5,7 @@ import Register from "./Register.jsx";
 import Profile from "./Profile.jsx";
 import FixProfile from "./FixProfile.jsx";
 import Home from "./Home.jsx";
+import FillProfile from "./FillProfile.jsx";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/fix-profile" element={<FixProfile />} />
       <Route path="/home" element={<Home />} />
+        <Route path="/fill-profile" element={<FillProfile/>}/>
     </Routes>
   );
 }

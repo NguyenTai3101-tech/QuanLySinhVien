@@ -41,4 +41,18 @@ public class StudentController {
         }
         return ResponseEntity.badRequest().body("Đăng nhập thất bại");
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateStudent(@PathVariable Long id,@RequestBody Student newInfo){
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student == null){
+            return ResponseEntity.badRequest().body("Không tồn tại tài khoản này");
+        }
+        student.setName(newInfo.getName());
+        student.setStudentId(newInfo.getStudentId());
+        student.setSchool(newInfo.getSchool());
+        studentRepository.save(student);
+        return ResponseEntity.ok("Cập nhật thông tin cá nhân thành công");
+    }
+
+
 }

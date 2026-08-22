@@ -5,7 +5,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  const handleRegister = async ()  => {
+  const handleRegister = async () => {
     if (email == "" || password == "" || confirmPassword == "") {
       alert("Tạo tài khoản không thành công chỉ thành phượng");
       return;
@@ -23,20 +23,24 @@ export default function Register() {
       return;
     }
     try {
-      const reponse = await fetch("http://localhost:8080/api/students/register",{
-        method: "POST",
-        headers :{"Content-type":"application/json"},
-        body: JSON.stringify({email,password})
-      })
+      const reponse = await fetch(
+        "http://localhost:8080/api/students/register",
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        },
+      );
       const message = await reponse.text();
-      if(reponse.ok){
+      if (reponse.ok) {
+        const createrUser = await reponse.json();
+        const userId = localStorage.setItem("userId", createrUser.id);
         alert(message);
-        navigate("/login");
+        navigate("/fill-profile");
       } else {
         alert(message);
       }
-    }
-    catch (error){
+    } catch (error) {
       alert("Lỗi kết nối!Thử xem mở Spring boot");
     }
   };
