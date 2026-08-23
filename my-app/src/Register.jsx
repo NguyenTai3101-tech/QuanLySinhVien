@@ -73,7 +73,7 @@ export default function Register() {
         />
       </div>
       <div>
-        <button onClick={handleRegister}>Tạo tài khoản</button>
+        <button onClick={handleRegister}>Tiếp tục</button>
       </div>
       <div>
         <button onClick={() => navigate("/login")}>

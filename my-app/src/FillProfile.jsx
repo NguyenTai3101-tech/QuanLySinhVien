@@ -56,7 +56,7 @@ export default function FillProfile() {
           onChange={(e) => setSchool(e.target.value)}
         />
         <div>
-          <button onClick={() => handleSave()}>Lưu thông tin</button>
+          <button onClick={() => handleSave()}>Tạo tài khoản</button>
         </div>
       </div>
     </>
