@@ -22,15 +22,12 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
 
+    // 1. Lấy danh sách toàn bộ sinh viên
     @GetMapping
-    public List<Student> getAll(){
-        return studentRepository.findAll();
-    }
-
-    @PostMapping
-    public Student createStudent(@RequestBody Student student){
-        return studentRepository.save(student);
-    }
+    public ResponseEntity<List<Student>> getAll() {
+        List<Student> students = studentRepository.findAll();
+        return ResponseEntity.ok(students);
+}
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Student student){
         if (studentRepository.existsByEmail(student.getEmail())){
