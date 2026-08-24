@@ -15,10 +15,10 @@ export default function FillProfile() {
     try {
       const userId = localStorage.getItem("userId");
       const response = await fetch(
-        `https://localhost:8080/api/students/${userId}`,
+        `http://localhost:8080/api/students/${userId}`,
         {
-          method: "GET",
-          headers: { "Content-type": "application/api" },
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, school, studentId }),
         },
       );
@@ -30,7 +30,7 @@ export default function FillProfile() {
         alert(message);
       }
     } catch (error) {
-      alert("Kiểm tra lại Spring boot");
+      console.error("Đang lỗi", error);
     }
   };
   return (

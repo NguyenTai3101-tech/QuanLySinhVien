@@ -6,17 +6,19 @@ import Profile from "./Profile.jsx";
 import FixProfile from "./FixProfile.jsx";
 import Home from "./Home.jsx";
 import FillProfile from "./FillProfile.jsx";
+import Teacher from "./Teacher.jsx";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Teacher />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/fix-profile" element={<FixProfile />} />
       <Route path="/home" element={<Home />} />
-        <Route path="/fill-profile" element={<FillProfile/>}/>
+      <Route path="/fill-profile" element={<FillProfile />} />
+      <Route path="teacher" element={<Teacher />} />
     </Routes>
   );
 }

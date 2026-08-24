@@ -19,9 +19,23 @@ public class Student {
     private String studentId;
     private String school;
     private String password;
+    private Double maths;
+    private Double physics;
+    private Double chemistry;
+    private Double literature;
+
     
 
     public Student() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     public String getName() {
         return name;
@@ -58,5 +72,38 @@ public class Student {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public Double getLiterature() {
+        return literature;
+    }
+
+    public void setLiterature(Double literature) {
+        this.literature = literature;
+    }
+
+    public Double getChemistry() {
+        return chemistry;
+    }
+
+    public void setChemistry(Double chemistry) {
+        this.chemistry = chemistry;
+    }
+
+    public Double getPhysics() {
+        return physics;
+    }
+
+    public void setPhysics(Double physics) {
+        this.physics = physics;
+    }
+
+    public Double getMaths() {
+        return maths;
+    }
+
+    public void setMaths(Double maths) {
+        this.maths = maths;
     }
 }

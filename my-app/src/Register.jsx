@@ -27,21 +27,22 @@ export default function Register() {
         "http://localhost:8080/api/students/register",
         {
           method: "POST",
-          headers: { "Content-type": "application/json" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         },
       );
-      const message = await reponse.text();
+
       if (reponse.ok) {
         const createrUser = await reponse.json();
-        const userId = localStorage.setItem("userId", createrUser.id);
-        alert(message);
+        localStorage.setItem("userId", createrUser.id);
+        alert("Tạo tài khoản thành công chuyển sang nhập thông tin");
         navigate("/fill-profile");
       } else {
+        const message = await reponse.text();
         alert(message);
       }
     } catch (error) {
-      alert("Lỗi kết nối!Thử xem mở Spring boot");
+      console.error("Đang lỗi",error);
     }
   };
 

@@ -15,7 +15,7 @@ export default function Login() {
         "http://localhost:8080/api/students/login",
         {
           method: "POST",
-          headers: { "Content-type": "application/json" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         },
       );
@@ -27,7 +27,7 @@ export default function Login() {
         alert(message);
       }
     } catch (error) {
-      alert("Lỗi kết nối ! Hãy kiểm tra Spring Boot đã bật chưa");
+      console.error("Đang lỗi",error);
     }
   };
   return (
