@@ -1,0 +1,108 @@
+Dưới đây là một **Roadmap danh sách tính năng cực kỳ đầy đủ**, sắp xếp theo đúng luồng phát triển của một dự án Quản lý Sinh viên chuyên nghiệp. Ní có thể coi đây như một "menu" để chọn làm dần dần:
+
+---
+
+### 🟢 CẤP ĐỘ 1: HOÀN THIỆN BẢNG ĐIỂM & TÍNH TOÁN (Tập trung UX/UI & Logic ngắn)
+
+1. **Tự động tính Điểm Trung Bình (GPA):**
+* Tính ĐTB từ 4 môn.
+
+
+2. **Tự động Xếp Loại Học Lực:**
+* Xuất sắc / Giỏi / Khá / Trung Bình / Yếu dựa trên ĐTB.
+
+
+3. **Đổi màu trạng thái (Badges/Highlight):**
+* Học lực Giỏi chữ Xanh, Yếu chữ Đỏ. Ô điểm $< 5.0$ tự động tô nền đỏ nhạt để giáo viên dễ chú ý.
+
+
+4. **Validate Điểm nhập vào:**
+* Giới hạn ô input chỉ cho nhập từ `0.0` đến `10.0`. Nếu gõ `-1` hoặc `11` sẽ báo lỗi và không cho lưu.
+
+
+5. **Thêm cột "Hành động" (Action):**
+* Nút **Xóa** sinh viên (có popup xác nhận "Bạn có chắc chắn xóa?").
+* Nút **Xem chi tiết** (Mở ra một Modal/Popup hiển thị toàn bộ hồ sơ sinh viên đó).
+
+
+
+---
+
+### 🟡 CẤP ĐỘ 2: TÌM KIẾM, LỌC & PHÂN TRANG (Xử lý dữ liệu lớn)
+
+6. **Tìm kiếm thông minh (Live Search):**
+* Ô tìm kiếm gõ tên hoặc mã sinh viên đến đâu, bảng tự động lọc danh sách đến đó.
+
+
+7. **Lọc danh sách (Filter):**
+* Dropdown lọc theo **Trường**, hoặc lọc theo **Học lực** (Chỉ xem sinh viên Yếu để cảnh báo).
+
+
+8. **Sắp xếp cột (Sorting):**
+* Click vào tiêu đề cột "Mã SV" hoặc "Điểm TB" để xếp tăng dần / giảm dần (A-Z, Z-A, Điểm từ cao xuống thấp).
+
+
+9. **Phân trang (Pagination):**
+* Khi danh sách có 100 sinh viên, chia bảng thành các trang (Mỗi trang 10-20 sinh viên) có nút `[Trang trước]` `[1]` `[2]` `[3]` `[Trang sau]`.
+
+
+
+---
+
+### 🟠 CẤP ĐỘ 3: DASHBOARD & THỐNG KÊ (Cho Giáo viên / Quản trị viên)
+
+10. **Các thẻ thống kê tổng quan (Stat Cards):**
+* Thẻ 1: Tổng số sinh viên.
+* Thẻ 2: Điểm trung bình toàn trường/lớp.
+* Thẻ 3: Tỷ lệ qua môn (%) vs Nợ môn (%).
+
+
+11. **Biểu đồ trực quan (Charts - Dùng Chart.js hoặc Recharts):**
+* Biểu đồ tròn (Pie Chart): Tỷ lệ Giỏi / Khá / Trung Bình / Yếu.
+* Biểu đồ cột (Bar Chart): So sánh điểm trung bình giữa các môn (Toán, Lý, Hóa, Văn xem môn nào điểm thấp nhất).
+
+
+
+---
+
+### 🔴 CẤP ĐỘ 4: BẢO MẬT & PHÂN QUYỀN (Role-Based Access Control)
+
+12. **Phân quyền người dùng (Roles):**
+* **ROLE_TEACHER (Giáo viên):** Vào được trang `Teacher.jsx`, sửa được điểm tất cả SV, có quyền xóa SV.
+* **ROLE_STUDENT (Sinh viên):** Đăng nhập vào chỉ thấy **Trang cá nhân của chính mình**, xem được điểm của mình (chỉ đọc `read-only`, không có ô input để sửa).
+
+
+13. **Khóa Token / Bảo mật Route (Protected Routes):**
+* Nếu chưa đăng nhập mà cố tình gõ URL `/teacher` thì tự động bị văng về trang `/login`.
+
+
+14. **Quên mật khẩu / Đổi mật khẩu:**
+* Trang đổi mật khẩu cho sinh viên / giáo viên.
+
+
+
+---
+
+### 🟣 CẤP ĐỘ 5: TIỆN ÍCH MỞ RỘNG (Gần với thực tế doanh nghiệp)
+
+15. **Xuất file Excel (Export to Excel):**
+* Thêm nút "Xuất file Excel" để giáo viên tải Bảng điểm (.xlsx) về máy.
+
+
+16. **Nhập danh sách từ Excel (Import from Excel):**
+* Nút "Upload file Excel" để thêm hàng loạt 50 sinh viên vào DB cùng lúc thay vì ngồi gõ từng người.
+
+
+17. **In bảng điểm / Xuất PDF:**
+* Nút "In phiếu điểm" tự động căn chỉnh trang web thành file PDF đẹp đẽ để in ra giấy.
+
+
+18. **Lịch sử sửa điểm (Audit Log):**
+* Ghi lại nhật ký: "Giáo viên A đã sửa điểm Toán của SV B từ 7 thành 8 lúc 10:30 ngày XX/YY".
+
+
+
+---
+
+💡 **Lời khuyên:**
+Ní nên chọn làm **từ Cấp độ 1 xuống Cấp độ 2** trước. Làm xong cái nào tick vào cái đó, làm tới đâu dự án sẽ xịn lên tới đó! Ní muốn chiến tính năng nào đầu tiên?

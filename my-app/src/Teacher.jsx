@@ -27,6 +27,14 @@ export default function Teacher() {
       console.error("Lỗi", error);
     }
   };
+  const getRank = (avgScore) => {
+    if (avgScore === "" || avgScore === null || avgScore === undefined)
+      return "";
+    if (avgScore >= 9.0) return "Xuất sắc";
+    if (avgScore >= 8.0 && avgScore < 9.0) return "Giỏi";
+    if (avgScore >= 6.5 && avgScore < 8.0) return "Khá";
+    if (avgScore < 6.5) return "Yếu";
+  };
   return (
     <>
       <div>
@@ -50,69 +58,96 @@ export default function Teacher() {
           </thead>
           <tbody>
             {listStudents.length > 0 ? (
-              listStudents.map((student) => (
-                <tr key={student.id}>
-                  <td>{student.studentId}</td>
-                  <td>{student.name}</td>
-                  <td>{student.school}</td>
-                  <td>
-                    <input
-                      type="number"
-                      step="0.1"
-                      defaultValue={student.maths || ""}
-                      onBlur={(e) =>
-                        handleSaveScoreOnBlur(
-                          student.id,
-                          "maths",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      step="0.1"
-                      defaultValue={student.physics || ""}
-                      onBlur={(e) =>
-                        handleSaveScoreOnBlur(
-                          student.id,
-                          "physics",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      step="0.1"
-                      defaultValue={student.chemistry || ""}
-                      onBlur={(e) =>
-                        handleSaveScoreOnBlur(
-                          student.id,
-                          "chemistry",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      step="0.1"
-                      defaultValue={student.literature || ""}
-                      onBlur={(e) =>
-                        handleSaveScoreOnBlur(
-                          student.id,
-                          "literature",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </td>
-                </tr>
-              ))
+              listStudents.map((student) => {
+                const mathsScore = Number(student.maths) || 0;
+                const physicsScore = Number(student.physics) || 0;
+                const chemistryScore = Number(student.chemistry) || 0;
+                const literatureScore = Number(student.literature) || 0;
+                const isFull = [
+                  student.maths,
+                  student.physics,
+                  student.chemistry,
+                  student.literature,
+                ].every(
+                  (score) =>
+                    score !== null && score !== "" && score !== undefined,
+                );
+                const avg = isFull
+                  ? (
+                      (mathsScore +
+                        physicsScore +
+                        chemistryScore +
+                        literatureScore) /
+                      4
+                    ).toFixed(2)
+                  : "";
+
+                return (
+                  <tr key={student.id}>
+                    <td>{student.studentId}</td>
+                    <td>{student.name}</td>
+                    <td>{student.school}</td>
+                    <td>
+                      <input
+                        type="number"
+                        step="0.1"
+                        defaultValue={student.maths || ""}
+                        onBlur={(e) =>
+                          handleSaveScoreOnBlur(
+                            student.id,
+                            "maths",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        step="0.1"
+                        defaultValue={student.physics || ""}
+                        onBlur={(e) =>
+                          handleSaveScoreOnBlur(
+                            student.id,
+                            "physics",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        step="0.1"
+                        defaultValue={student.chemistry || ""}
+                        onBlur={(e) =>
+                          handleSaveScoreOnBlur(
+                            student.id,
+                            "chemistry",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        step="0.1"
+                        defaultValue={student.literature || ""}
+                        onBlur={(e) =>
+                          handleSaveScoreOnBlur(
+                            student.id,
+                            "literature",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </td>
+                    <td>{avg}</td>
+                    <td>{getRank(avg)}</td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="8">Chưa có sinh viên nào hoặc đang tải...</td>
