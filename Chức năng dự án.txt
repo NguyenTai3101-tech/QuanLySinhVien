@@ -12,10 +12,6 @@ Dưới đây là một **Roadmap danh sách tính năng cực kỳ đầy đủ
 * Xuất sắc / Giỏi / Khá / Trung Bình / Yếu dựa trên ĐTB.
 
 
-3. **Đổi màu trạng thái (Badges/Highlight):**
-* Học lực Giỏi chữ Xanh, Yếu chữ Đỏ. Ô điểm $< 5.0$ tự động tô nền đỏ nhạt để giáo viên dễ chú ý.
-
-
 4. **Validate Điểm nhập vào:**
 * Giới hạn ô input chỉ cho nhập từ `0.0` đến `10.0`. Nếu gõ `-1` hoặc `11` sẽ báo lỗi và không cho lưu.
 

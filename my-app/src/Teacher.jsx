@@ -27,6 +27,23 @@ export default function Teacher() {
       console.error("Lỗi", error);
     }
   };
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) return;
+    try {
+      const response = await fetch(`http://localhost:8080/api/students/${id}`, {
+        method: "DELETE",
+      });
+      const message = await response.text();
+      if (response.ok) {
+        alert(message);
+        setListStudents((prev) => prev.filter((student) => student.id !== id));
+      } else {
+        alert(message);
+      }
+    } catch (error) {
+      console.error("Lỗi xảy ra ", error);
+    }
+  };
   const getRank = (avgScore) => {
     if (avgScore === "" || avgScore === null || avgScore === undefined)
       return "";
@@ -47,6 +64,8 @@ export default function Teacher() {
               <th colSpan="4">Điểm số</th>
               <th rowSpan="2">Điểm trung bình</th>
               <th rowSpan="2">Đánh giá</th>
+              <th rowSpan="2">Chỉnh sửa</th>
+              <th rowSpan="2">Xem thông tin</th>
             </tr>
 
             <tr>
@@ -91,6 +110,8 @@ export default function Teacher() {
                       <input
                         type="number"
                         step="0.1"
+                        min="0"
+                        max="10"
                         defaultValue={student.maths || ""}
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
@@ -105,6 +126,8 @@ export default function Teacher() {
                       <input
                         type="number"
                         step="0.1"
+                        min="0"
+                        max="10"
                         defaultValue={student.physics || ""}
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
@@ -117,8 +140,10 @@ export default function Teacher() {
                     </td>
                     <td>
                       <input
-                        type="text"
+                        type="number"
                         step="0.1"
+                        min="0"
+                        max="10"
                         defaultValue={student.chemistry || ""}
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
@@ -131,8 +156,10 @@ export default function Teacher() {
                     </td>
                     <td>
                       <input
-                        type="text"
+                        type="number"
                         step="0.1"
+                        min="0"
+                        max="10"
                         defaultValue={student.literature || ""}
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
@@ -145,6 +172,12 @@ export default function Teacher() {
                     </td>
                     <td>{avg}</td>
                     <td>{getRank(avg)}</td>
+                    <td>
+                      <button onClick={() => handleDelete(student.id)}>
+                        Xóa
+                      </button>
+                    </td>
+                    <td></td>
                   </tr>
                 );
               })
