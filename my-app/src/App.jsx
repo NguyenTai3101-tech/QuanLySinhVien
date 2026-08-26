@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
-import Profile from "./Profile.jsx";
 import FixProfile from "./FixProfile.jsx";
 import Home from "./Home.jsx";
 import FillProfile from "./FillProfile.jsx";
 import Teacher from "./Teacher.jsx";
+import Profile from "./Profile.jsx";
 
 export default function App() {
   return (
@@ -19,6 +19,7 @@ export default function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/fill-profile" element={<FillProfile />} />
       <Route path="teacher" element={<Teacher />} />
+      <Route path="/profile/:id" element={<Profile />} />
     </Routes>
   );
 }

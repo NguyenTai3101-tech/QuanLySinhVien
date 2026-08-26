@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Teacher() {
   const [listStudents, setListStudents] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchStudent = async () => {
       try {
@@ -18,11 +20,20 @@ export default function Teacher() {
   }, []);
   const handleSaveScoreOnBlur = async (id, subject, scoreValue) => {
     try {
-      await fetch(`http://localhost:8080/api/students/${id}/score`, {
+      const response = await fetch(`http://localhost:8080/api/students/${id}/score`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [subject]: scoreValue }),
       });
+      
+      if (response.ok) {
+      // DÒNG MỚI THÊM: Cập nhật ngay vào State của React
+      setListStudents((prev) =>
+        prev.map((student) =>
+          student.id == id ? { ...student, [subject]: scoreValue } : student
+        )
+      );
+    }
     } catch (error) {
       console.error("Lỗi", error);
     }
@@ -52,6 +63,7 @@ export default function Teacher() {
     if (avgScore >= 6.5 && avgScore < 8.0) return "Khá";
     if (avgScore < 6.5) return "Yếu";
   };
+  
   return (
     <>
       <div>
@@ -177,7 +189,11 @@ export default function Teacher() {
                         Xóa
                       </button>
                     </td>
-                    <td></td>
+                    <td>
+                      <button onClick={()=>navigate(`/profile/${student.id}`)}>
+                        Xem thông tin
+                      </button>
+                    </td>
                   </tr>
                 );
               })
