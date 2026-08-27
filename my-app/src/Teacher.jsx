@@ -1,43 +1,94 @@
 import { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const isValidScore = (score) => {
+  if (score === null || score === "" || score === undefined) return false;
+  const num = Number(score);
+  return !isNaN(num) && num >= 0 && num <= 10;
+};
+
+const getRank = (avgScore) => {
+  if (avgScore === "" || avgScore === null || avgScore === undefined) return "";
+  if (avgScore >= 9.0 && avgScore <= 10) return "Xuất sắc";
+  if (avgScore >= 8.0 && avgScore < 9.0) return "Giỏi";
+  if (avgScore >= 6.5 && avgScore < 8.0) return "Khá";
+  if (avgScore < 6.5) return "Yếu";
+};
 
 export default function Teacher() {
   const [listStudents, setListStudents] = useState([]);
+  const [searchStudent, setSearchStudent] = useState("");
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchStudent = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/students");
-        if (response.ok) {
-          const data = await response.json();
-          setListStudents(data);
-        }
-      } catch (error) {
-        console.error("Hiện đang có lỗi", error);
-      }
-    };
-    fetchStudent();
-  }, []);
-  const handleSaveScoreOnBlur = async (id, subject, scoreValue) => {
+
+  // Tách hàm fetchStudent ra ngoài để tái sử dụng khi cần khôi phục dữ liệu
+  const fetchStudent = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/students/${id}/score`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [subject]: scoreValue }),
-      });
-      
+      const response = await fetch("http://localhost:8080/api/students");
       if (response.ok) {
-      // DÒNG MỚI THÊM: Cập nhật ngay vào State của React
-      setListStudents((prev) =>
-        prev.map((student) =>
-          student.id == id ? { ...student, [subject]: scoreValue } : student
-        )
-      );
-    }
+        const data = await response.json();
+        setListStudents(data);
+      }
     } catch (error) {
-      console.error("Lỗi", error);
+      console.error("Hiện đang có lỗi", error);
     }
   };
+
+  useEffect(() => {
+    fetchStudent();
+  }, []);
+
+  const handleInputChange = (id, subject, value) => {
+    setListStudents((prev) =>
+      prev.map((student) =>
+        student.id === id ? { ...student, [subject]: value } : student,
+      ),
+    );
+  };
+
+  const handleSaveScoreOnBlur = async (id, subject, scoreValue) => {
+    const score = Number(scoreValue);
+    if (!isValidScore(scoreValue)) {
+      toast.error("Nhập điểm không hợp lệ!!! Vui lòng nhập từ 0 đến 10");
+      fetchStudent();
+      return;
+    }
+
+    // 1. Nếu nhập sai quy định (âm hoặc > 10)
+    if (score < 0 || score > 10) {
+      toast.error("Nhập điểm không hợp lệ!!! Vui lòng nhập từ 0 đến 10");
+      fetchStudent(); // Tải lại dữ liệu gốc từ Server để xóa số sai trên màn hình
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/students/${id}/score`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ [subject]: Number(scoreValue) }),
+        },
+      );
+
+      if (response.ok) {
+        setListStudents((prev) =>
+          prev.map((student) =>
+            student.id === id ? { ...student, [subject]: scoreValue } : student,
+          ),
+        );
+      } else {
+        toast.error("Lưu điểm thất bại!");
+        fetchStudent(); // Nếu Server lưu thất bại, reset về điểm cũ từ Server
+      }
+    } catch (error) {
+      console.error("Lỗi", error);
+      fetchStudent(); // Lỗi mạng cũng reset về điểm cũ
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) return;
     try {
@@ -55,17 +106,22 @@ export default function Teacher() {
       console.error("Lỗi xảy ra ", error);
     }
   };
-  const getRank = (avgScore) => {
-    if (avgScore === "" || avgScore === null || avgScore === undefined)
-      return "";
-    if (avgScore >= 9.0) return "Xuất sắc";
-    if (avgScore >= 8.0 && avgScore < 9.0) return "Giỏi";
-    if (avgScore >= 6.5 && avgScore < 8.0) return "Khá";
-    if (avgScore < 6.5) return "Yếu";
-  };
-  
+
+  const filteredStudent = listStudents.filter((student) =>
+    (student.name || "").toLowerCase().includes(searchStudent.toLowerCase()),
+  );
+
   return (
     <>
+      <ToastContainer autoClose={3000} />
+      <div>
+        <input
+          type="text"
+          placeholder="Tìm kiếm sinh viên ..."
+          value={searchStudent}
+          onChange={(e) => setSearchStudent(e.target.value)}
+        />
+      </div>
       <div>
         <table border="1">
           <thead>
@@ -88,8 +144,8 @@ export default function Teacher() {
             </tr>
           </thead>
           <tbody>
-            {listStudents.length > 0 ? (
-              listStudents.map((student) => {
+            {filteredStudent.length > 0 ? (
+              filteredStudent.map((student) => {
                 const mathsScore = Number(student.maths) || 0;
                 const physicsScore = Number(student.physics) || 0;
                 const chemistryScore = Number(student.chemistry) || 0;
@@ -99,10 +155,7 @@ export default function Teacher() {
                   student.physics,
                   student.chemistry,
                   student.literature,
-                ].every(
-                  (score) =>
-                    score !== null && score !== "" && score !== undefined,
-                );
+                ].every(isValidScore);
                 const avg = isFull
                   ? (
                       (mathsScore +
@@ -118,13 +171,18 @@ export default function Teacher() {
                     <td>{student.studentId}</td>
                     <td>{student.name}</td>
                     <td>{student.school}</td>
+
+                    {/* TOÁN */}
                     <td>
                       <input
                         type="number"
                         step="0.1"
                         min="0"
                         max="10"
-                        defaultValue={student.maths || ""}
+                        value={student.maths ?? ""}
+                        onChange={(e) =>
+                          handleInputChange(student.id, "maths", e.target.value)
+                        }
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
                             student.id,
@@ -134,13 +192,22 @@ export default function Teacher() {
                         }
                       />
                     </td>
+
+                    {/* LÝ */}
                     <td>
                       <input
                         type="number"
                         step="0.1"
                         min="0"
                         max="10"
-                        defaultValue={student.physics || ""}
+                        value={student.physics ?? ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            student.id,
+                            "physics",
+                            e.target.value,
+                          )
+                        }
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
                             student.id,
@@ -150,13 +217,22 @@ export default function Teacher() {
                         }
                       />
                     </td>
+
+                    {/* HÓA */}
                     <td>
                       <input
                         type="number"
                         step="0.1"
                         min="0"
                         max="10"
-                        defaultValue={student.chemistry || ""}
+                        value={student.chemistry ?? ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            student.id,
+                            "chemistry",
+                            e.target.value,
+                          )
+                        }
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
                             student.id,
@@ -166,13 +242,22 @@ export default function Teacher() {
                         }
                       />
                     </td>
+
+                    {/* VĂN */}
                     <td>
                       <input
                         type="number"
                         step="0.1"
                         min="0"
                         max="10"
-                        defaultValue={student.literature || ""}
+                        value={student.literature ?? ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            student.id,
+                            "literature",
+                            e.target.value,
+                          )
+                        }
                         onBlur={(e) =>
                           handleSaveScoreOnBlur(
                             student.id,
@@ -182,6 +267,7 @@ export default function Teacher() {
                         }
                       />
                     </td>
+
                     <td>{avg}</td>
                     <td>{getRank(avg)}</td>
                     <td>
@@ -190,7 +276,11 @@ export default function Teacher() {
                       </button>
                     </td>
                     <td>
-                      <button onClick={()=>navigate(`/profile/${student.id}`)}>
+                      <button
+                        onClick={() =>
+                          navigate(`/detail-student/${student.id}`)
+                        }
+                      >
                         Xem thông tin
                       </button>
                     </td>
@@ -199,7 +289,7 @@ export default function Teacher() {
               })
             ) : (
               <tr>
-                <td colSpan="8">Chưa có sinh viên nào hoặc đang tải...</td>
+                <td colSpan="11">Chưa có sinh viên nào hoặc đang tải...</td>
               </tr>
             )}
           </tbody>
