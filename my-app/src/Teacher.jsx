@@ -21,6 +21,7 @@ const getRank = (avgScore) => {
 export default function Teacher() {
   const [listStudents, setListStudents] = useState([]);
   const [searchStudent, setSearchStudent] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState("All");
   const navigate = useNavigate();
 
   // Tách hàm fetchStudent ra ngoài để tái sử dụng khi cần khôi phục dữ liệu
@@ -107,9 +108,14 @@ export default function Teacher() {
     }
   };
 
-  const filteredStudent = listStudents.filter((student) =>
-    (student.name || "").toLowerCase().includes(searchStudent.toLowerCase()),
-  );
+  const filteredStudent = listStudents.filter((student) => {
+    const matchesName = (student.name || "")
+      .toLowerCase()
+      .includes(searchStudent.toLowerCase());
+    const matchesSchool =
+      selectedSchool === "All" || student.school === selectedSchool;
+    return matchesName && matchesSchool;
+  });
 
   return (
     <>
@@ -122,13 +128,57 @@ export default function Teacher() {
           onChange={(e) => setSearchStudent(e.target.value)}
         />
       </div>
+
       <div>
         <table border="1">
           <thead>
             <tr>
               <th rowSpan="2">Mã sinh viên</th>
               <th rowSpan="2">Họ và tên</th>
-              <th rowSpan="2">Trường</th>
+              <th rowSpan="2" style={{ padding: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <span>Trường</span>
+                  <div
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <select
+                      value={selectedSchool}
+                      onChange={(e) => setSelectedSchool(e.target.value)}
+                      style={{
+                        opacity: 0, // Ẩn phần khung thô của select
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="All">Tất cả sinh viên</option>
+                      <option value="Đại học Công Nghệ">
+                        Đại học Công Nghệ
+                      </option>
+                      <option value="Đại học Illinois">Đại học Illinois</option>
+                    </select>
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "12px",
+                        color: selectedSchool !== "All" ? "#1890ff" : "#666",
+                      }}
+                    >
+                      ▼
+                    </span>
+                  </div>
+                </div>
+              </th>
               <th colSpan="4">Điểm số</th>
               <th rowSpan="2">Điểm trung bình</th>
               <th rowSpan="2">Đánh giá</th>
